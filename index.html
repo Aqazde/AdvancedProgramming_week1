@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch Data Example</title>
+</head>
+<body>
+<h1>Data from Go Server</h1>
+<button onclick="getData()">Get Data</button>
+<pre id="data"></pre>
+
+<script>
+    function getData() {
+        fetch('http://localhost:1997/getdata')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Bad network response');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('data').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Problem with the fetch operation:', error);
+            });
+    }
+</script>
+</body>
+</html>
