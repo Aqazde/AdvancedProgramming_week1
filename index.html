@@ -1,30 +1,63 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Fetch Data Example</title>
+    <title>Example</title>
 </head>
 <body>
-<h1>Data from Go Server</h1>
+<h1>Go Server</h1>
+<h2>GET Request</h2>
 <button onclick="getData()">Get Data</button>
-<pre id="data"></pre>
+<pre id="getDataResult"></pre>
+
+<h2>POST Request</h2>
+<form id="postDataForm">
+    <label for="postDataInput">Enter Data:</label>
+    <input type="text" id="postDataInput" name="postDataInput">
+    <button type="submit">Send Data</button>
+</form>
+<pre id="postDataResult"></pre>
 
 <script>
     function getData() {
-        fetch('http://localhost:1997/getdata')
+        fetch('http://localhost:8080/getdata')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Bad network response');
+                    throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
-                document.getElementById('data').innerText = JSON.stringify(data, null, 2);
+                document.getElementById('getDataResult').innerText = JSON.stringify(data, null, 2);
             })
             .catch(error => {
-                console.error('Problem with the fetch operation:', error);
+                console.error('There was a problem with the fetch operation:', error);
             });
     }
+
+    document.getElementById('postDataForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const inputData = document.getElementById('postDataInput').value;
+
+        fetch('http://localhost:8080/postdata', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inputData }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('postDataResult').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
 </script>
 </body>
 </html>
